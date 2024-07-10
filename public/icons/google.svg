@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <g id="Group_80" data-name="Group 80" transform="translate(2)">
+    <circle id="Ellipse_28" data-name="Ellipse 28" cx="16" cy="16" r="16" transform="translate(-2)" fill="#fff"/>
+    <g id="google" transform="translate(0.94 2.94)">
+      <path id="Path_1" data-name="Path 1" d="M6.122,108.162a6.9,6.9,0,0,1,.976-3.544v-4.4h-4.4a13.067,13.067,0,0,0,0,15.895H7.1v-4.4A6.9,6.9,0,0,1,6.122,108.162Z" transform="translate(0 -95.103)" fill="#fbbd00"/>
+      <path id="Path_2" data-name="Path 2" d="M199.061,373.932,196,376.993l3.061,3.061a12.961,12.961,0,0,0,7.947-2.695v-4.4h-4.4A6.937,6.937,0,0,1,199.061,373.932Z" transform="translate(-186.001 -353.934)" fill="#0f9d58"/>
+      <path id="Path_3" data-name="Path 3" d="M57.226,325.477l-4.4,4.4a13.265,13.265,0,0,0,1.13,1.287,12.975,12.975,0,0,0,9.235,3.825v-6.122A6.941,6.941,0,0,1,57.226,325.477Z" transform="translate(-50.128 -308.873)" fill="#31aa52"/>
+      <path id="Path_4" data-name="Path 4" d="M269.06,200.317a13.173,13.173,0,0,0-.214-2.366l-.115-.627H256v6.122h6.2a6.906,6.906,0,0,1-2.647,2.838l4.4,4.4a13.264,13.264,0,0,0,1.287-1.13A12.975,12.975,0,0,0,269.06,200.317Z" transform="translate(-242.94 -187.258)" fill="#3c79e6"/>
+      <path id="Path_5" data-name="Path 5" d="M203.967,8.154l.541.541,4.329-4.329-.541-.541A12.974,12.974,0,0,0,199.061,0L196,3.061l3.061,3.061A6.893,6.893,0,0,1,203.967,8.154Z" transform="translate(-186.001 0)" fill="#cf2d48"/>
+      <path id="Path_6" data-name="Path 6" d="M63.187,6.122V0a12.975,12.975,0,0,0-9.235,3.825,13.256,13.256,0,0,0-1.13,1.287l4.4,4.4A6.941,6.941,0,0,1,63.187,6.122Z" transform="translate(-50.127 0)" fill="#eb4132"/>
+    </g>
+  </g>
+</svg>
