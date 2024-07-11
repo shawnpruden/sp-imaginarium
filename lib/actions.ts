@@ -24,6 +24,10 @@ export const login = async (values: z.infer<typeof AuthFormSchemas.login>) => {
     });
   } catch (error) {
     if (error instanceof AuthError) {
+      if (error.type === 'AccessDenied') {
+        return { error: 'Please verify your email address before logging in.' };
+      }
+
       return {
         error:
           'The email address or password you entered is incorrect. Please try again.',
@@ -49,7 +53,7 @@ export const signUp = async (
 
   const existingUser = await getUserByEmail(email);
 
-  if (existingUser) return { error: 'Email already in use' };
+  if (existingUser) return { error: 'This email address already exists.' };
 
   await prisma.user.create({ data: { name, email, password: hashedPassword } });
 

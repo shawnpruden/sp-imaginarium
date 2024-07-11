@@ -10,14 +10,28 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
-  callbacks: {
-    async signIn({ user, profile }) {
-      const existingUser = await getUserById(user.id);
+  pages: {
+    signIn: '/login',
+  },
 
-      if (!existingUser || !existingUser.emailVerified) return false;
-
-      return true;
+  events: {
+    async linkAccount({ user }) {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { emailVerified: new Date() },
+      });
     },
+  },
+
+  callbacks: {
+    // async signIn({ user }) {
+    //   console.log('first');
+    //   const existingUser = await getUserById(user.id);
+
+    //   if (!existingUser || !existingUser.emailVerified) return false;
+
+    //   return true;
+    // },
 
     async jwt({ token }) {
       const prismaUser = await prisma.user.findFirst({
