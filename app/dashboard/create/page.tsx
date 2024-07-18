@@ -94,11 +94,11 @@ export default function CreatePage() {
                         endpoint="imageUploader"
                         onClientUploadComplete={(res) => {
                           form.setValue('fileUrl', res[0].url);
-                          toast.success('Upload complete');
+                          toast.success('Upload complete!');
                         }}
                         onUploadError={(error: Error) => {
                           console.error(error);
-                          toast.error('Upload failed');
+                          toast.error('Upload failed!');
                         }}
                         config={{ mode: 'auto' }}
                       />

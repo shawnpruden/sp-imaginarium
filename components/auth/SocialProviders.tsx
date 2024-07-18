@@ -51,7 +51,7 @@ export default function SocialProviders({ isPending }: { isPending: boolean }) {
             try {
               signIn('github', { callbackUrl: DEFAULT_LOGIN_REDIRECT });
             } catch (error) {
-              console.log(error);
+              console.error(error);
             }
           }}
           disabled={isPending}
