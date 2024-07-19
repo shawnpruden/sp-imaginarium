@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { Alert, AlertTitle } from '../ui/alert';
+import FormWrapper from '../shared/FormWrapper';
 
 type Message = {
   type: 'success' | 'error' | null;
@@ -26,23 +27,19 @@ export default function VerificationForm() {
   const token = searchParams.get('token');
 
   const onSubmit = useCallback(() => {
-    if (!token) {
-      setMessage({ type: 'error', text: 'Token not found!' });
-    } else {
-      verifyToken(token)
-        .then((data) => {
-          if (data.success) {
-            setMessage({ type: 'success', text: data.success });
-          }
+    verifyToken(token)
+      .then((data) => {
+        if (data.success) {
+          setMessage({ type: 'success', text: data.success });
+        }
 
-          if (data.error) {
-            setMessage({ type: 'error', text: data.error });
-          }
-        })
-        .catch(() =>
-          setMessage({ type: 'error', text: 'Something went wrong!' })
-        );
-    }
+        if (data.error) {
+          setMessage({ type: 'error', text: data.error });
+        }
+      })
+      .catch(() =>
+        setMessage({ type: 'error', text: 'Something went wrong!' })
+      );
   }, [token]);
 
   useEffect(() => {
@@ -52,7 +49,7 @@ export default function VerificationForm() {
   return (
     <AlertDialog open>
       <AlertDialogContent className="outline-none">
-        <div className="w-svw sm:w-full h-svh sm:h-fit px-16 sm:px-28 py-28 sm:py-12">
+        <FormWrapper>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex justify-center">
               <p className="rounded-full p-4 border-2 border-black dark:border-white">
@@ -91,7 +88,7 @@ export default function VerificationForm() {
               Back to login
             </Link>
           </div>
-        </div>
+        </FormWrapper>
       </AlertDialogContent>
     </AlertDialog>
   );

@@ -20,6 +20,7 @@ import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import FormWrapper from '../shared/FormWrapper';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -29,7 +30,7 @@ import {
 } from '../ui/alert-dialog';
 import SocialProviders from './SocialProviders';
 
-export default function AuthForm({
+export default function ResetPasswordForm({
   mode,
 }: {
   mode: 'login' | 'signUp' | 'forgotPassword';
@@ -64,7 +65,7 @@ export default function AuthForm({
   return (
     <AlertDialog open>
       <AlertDialogContent className="outline-none">
-        <div className="w-svw sm:w-full h-svh sm:h-fit px-16 sm:px-28 py-28 sm:py-12">
+        <FormWrapper>
           <AlertDialogHeader>
             <AlertDialogTitle className="capitalize text-4xl flex justify-center">
               {mode === 'forgotPassword' ? (
@@ -84,8 +85,8 @@ export default function AuthForm({
             >
               {mode === 'forgotPassword' && (
                 <FormDescription>
-                  Enter your email and we will send you a link to get back into
-                  your account.
+                  Enter your email and we will send you a link to reset your
+                  password.
                 </FormDescription>
               )}
 
@@ -186,7 +187,7 @@ export default function AuthForm({
           {mode !== 'forgotPassword' && (
             <SocialProviders isPending={isPending} />
           )}
-        </div>
+        </FormWrapper>
       </AlertDialogContent>
     </AlertDialog>
   );

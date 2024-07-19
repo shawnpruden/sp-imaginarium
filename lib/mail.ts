@@ -4,6 +4,17 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 const DOMAIN = 'http://localhost:3000';
 
+export const sendPasswordResetEmail = async (email: string, token: string) => {
+  const passwordResetLink = `${DOMAIN}/reset-password?token=${token}`;
+
+  await resend.emails.send({
+    from: 'onboarding@resend.dev',
+    to: email,
+    subject: 'Reset your password',
+    html: `<p>Click <a href="${passwordResetLink}">here</a> to reset your password.</p>`,
+  });
+};
+
 export const sendVerificationEmail = async (email: string, token: string) => {
   const confirmationLink = `${DOMAIN}/verify-email?token=${token}`;
 

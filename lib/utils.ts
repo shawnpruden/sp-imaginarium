@@ -86,7 +86,6 @@ export async function getVerificationTokenByToken(token: string) {
   }
 }
 
-// * tokens-related
 export async function generateVerificationToken(email: string) {
   const token = uuidv4();
   const expires = new Date(new Date().getTime() + 3600 * 1000); // in one hour
@@ -101,4 +100,47 @@ export async function generateVerificationToken(email: string) {
   });
 
   return verificationToken;
+}
+
+// * passwordResetToken-related
+export async function getResetPasswordTokenByEmail(email: string) {
+  try {
+    const passwordResetToken = await prisma.passwordResetToken.findFirst({
+      where: { email },
+    });
+
+    return passwordResetToken;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function getResetPasswordTokenByToken(token: string) {
+  try {
+    const passwordResetToken = await prisma.passwordResetToken.findUnique({
+      where: { token },
+    });
+
+    return passwordResetToken;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function generateResetPasswordToken(email: string) {
+  const token = uuidv4();
+  const expires = new Date(new Date().getTime() + 3600 * 1000); // in one hour
+
+  const existingToken = await getResetPasswordTokenByEmail(email);
+  if (existingToken) {
+    await prisma.passwordResetToken.delete({ where: { id: existingToken.id } });
+  }
+
+  const passwordResetToken = await prisma.passwordResetToken.create({
+    data: { email, token, expires },
+  });
+
+  return passwordResetToken;
 }

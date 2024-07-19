@@ -42,6 +42,13 @@ const ForgotPasswordSchema = BaseAuthFormSchemas.omit({
   confirmPassword: true,
 });
 
+export const ResetPasswordSchema = BaseAuthFormSchemas.omit({
+  email: true,
+}).refine((data) => data.password === data.confirmPassword, {
+  path: ['confirmPassword'],
+  message: 'Passwords do not match',
+});
+
 export const AuthFormSchemas = {
   login: LoginSchema,
   signUp: SignUpSchema,
