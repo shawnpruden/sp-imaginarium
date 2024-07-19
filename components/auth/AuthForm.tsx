@@ -10,18 +10,17 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { AuthFormActions, AuthActionReturn } from '@/lib';
+import { AuthActionReturn, AuthFormActions } from '@/lib';
 import { AuthFormSchemas } from '@/lib/schemas';
 import { getAuthFormConfig } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Lock } from 'lucide-react';
-import { signIn } from 'next-auth/react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import FormWrapper from '../shared/FormWrapper';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -29,8 +28,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '../ui/alert-dialog';
+import SocialProviders from './SocialProviders';
 
-export default function AuthForm({
+export default function ResetPasswordForm({
   mode,
 }: {
   mode: 'login' | 'signUp' | 'forgotPassword';
@@ -50,6 +50,7 @@ export default function AuthForm({
   const formAction = AuthFormActions[mode] as (
     values: z.infer<typeof formSchema>
   ) => AuthActionReturn;
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(() =>
       formAction(values).then(({ success, error }) => {
@@ -64,7 +65,7 @@ export default function AuthForm({
   return (
     <AlertDialog open>
       <AlertDialogContent className="outline-none">
-        <div className="w-svw sm:w-full h-svh sm:h-fit px-16 sm:px-28 py-28 sm:py-12">
+        <FormWrapper>
           <AlertDialogHeader>
             <AlertDialogTitle className="capitalize text-4xl flex justify-center">
               {mode === 'forgotPassword' ? (
@@ -84,8 +85,8 @@ export default function AuthForm({
             >
               {mode === 'forgotPassword' && (
                 <FormDescription>
-                  Enter your email and we will send you a link to get back into
-                  your account.
+                  Enter your email and we will send you a link to reset your
+                  password.
                 </FormDescription>
               )}
 
@@ -184,32 +185,9 @@ export default function AuthForm({
           </div>
 
           {mode !== 'forgotPassword' && (
-            <>
-              <div className="flex items-center justify-center my-2">
-                <p className="grow border-t border-gray-200 dark:border-gray-700" />
-                <span className="px-4 text-black dark:text-white">or</span>
-                <p className="grow border-t border-gray-200 dark:border-gray-700" />
-              </div>
-
-              <Button
-                className="w-full gap-x-2"
-                variant="outline"
-                onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
-                disabled={isPending}
-              >
-                <Image
-                  priority
-                  src="/icons/google.svg"
-                  alt="google"
-                  width={20}
-                  height={20}
-                />
-
-                <span>Continue with Google</span>
-              </Button>
-            </>
+            <SocialProviders isPending={isPending} />
           )}
-        </div>
+        </FormWrapper>
       </AlertDialogContent>
     </AlertDialog>
   );
