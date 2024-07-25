@@ -63,7 +63,7 @@ export default function ResetPasswordForm({
   const authFormConfig = getAuthFormConfig(mode);
 
   return (
-    <AlertDialog open>
+    <AlertDialog defaultOpen>
       <AlertDialogContent className="outline-none">
         <FormWrapper>
           <AlertDialogHeader>

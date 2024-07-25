@@ -40,20 +40,24 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String      @id @default(cuid())
     name          String?
-    username      String?   @unique
+    username      String?     @unique
     bio           String?
     website       String?
     gender        String?
-    email         String?   @unique
+    email         String?     @unique
     password      String?
     emailVerified DateTime?
     image         String?
-    createdAt     DateTime  @default(now()) @map(name: "created_at")
-    updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+    createdAt     DateTime    @default(now()) @map(name: "created_at")
+    updatedAt     DateTime    @updatedAt @map(name: "updated_at")
     accounts      Account[]
     sessions      Session[]
+    posts         Post[]
+    saved         SavedPost[]
+    likes         Like[]
+    comments      Comment[]
 
     @@map("users")
 }
@@ -74,4 +78,62 @@ model PasswordResetToken {
     expires DateTime
 
     @@unique([email, token])
+}
+
+model Post {
+    id        String      @id @default(cuid())
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
+    caption   String?
+    fileUrl   String      @unique
+    likes     Like[]
+    savedBy   SavedPost[]
+    comments  Comment[]
+    user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String      @map("user_id")
+
+    @@index([userId])
+}
+
+model SavedPost {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId    String
+    userId    String   @map("user_id")
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([postId, userId])
+    @@index([userId])
+}
+
+model Like {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId    String
+    userId    String   @map("user_id")
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([postId, userId])
+    @@index([userId])
+}
+
+model Comment {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    body      String
+    post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId    String
+    userId    String   @map("user_id")
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([postId])
+    @@index([userId])
 }

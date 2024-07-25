@@ -13,7 +13,7 @@ export default function ThemeSwitcher({
 
   return (
     <>
-      <div className="flex items-center border-b border-gray-200 dark:border-neutral-700 py-3.5 px-2.5">
+      <div className="flex items-center border-b border-gray-300 dark:border-neutral-700 py-3.5 px-2.5">
         <ChevronLeft
           size={18}
           className="cursor-pointer opacity-30"

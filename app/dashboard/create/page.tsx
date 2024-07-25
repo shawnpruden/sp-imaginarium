@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { createPost } from '@/lib/actions';
 import { CreatePostFormSchema } from '@/lib/schemas';
 import { UploadDropzone } from '@/lib/uploadthing';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -40,8 +41,15 @@ export default function CreatePage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof CreatePostFormSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof CreatePostFormSchema>) {
+    createPost(values).then(({ success, error }) => {
+      if (success) {
+        toast.success(success);
+        router.push('/dashboard');
+      }
+
+      if (error) toast.error(error);
+    });
   }
 
   const fileUrl = form.watch('fileUrl');
@@ -56,7 +64,7 @@ export default function CreatePage() {
           <DialogTitle>Create New Post</DialogTitle>
         </DialogHeader>
 
-        <Separator className="bg-gray-200 dark:bg-neutral-700" />
+        <Separator className="bg-gray-300 dark:bg-neutral-700" />
 
         <Form {...form}>
           <form
