@@ -12,6 +12,7 @@ export default function UserAvatar({ user, ...avatarProps }: UserAvatarProps) {
         priority
         src={user?.image || '/images/no-avatar.jpg'}
         fill
+        sizes="100%"
         alt={`${user?.name}'s profile picture`}
         className="rounded-full object-cover"
       />

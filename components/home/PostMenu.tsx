@@ -21,13 +21,11 @@ type PostOptionsProps = {
   className?: string;
 };
 
-export default function PostOptions({
+export default function PostMenu({
   post,
   isPostOwner,
   className,
 }: PostOptionsProps) {
-  console.log(post);
-
   const [isPending, startTransition] = useTransition();
 
   function handleDeletePost(formData: FormData) {
