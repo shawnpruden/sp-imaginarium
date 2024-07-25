@@ -1,17 +1,19 @@
 'use client';
 
-import { PostWithExtras } from '@/lib/types';
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { MoreHorizontal } from 'lucide-react';
+import { deletePost } from '@/lib/actions';
+import { PostWithExtras } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
+import { DialogTitle } from '@radix-ui/react-dialog';
+import { MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 import { useTransition } from 'react';
+import { toast } from 'sonner';
 
 type PostOptionsProps = {
   post: PostWithExtras;
@@ -27,6 +29,15 @@ export default function PostOptions({
   console.log(post);
 
   const [isPending, startTransition] = useTransition();
+
+  function handleDeletePost(formData: FormData) {
+    startTransition(() => {
+      deletePost(formData).then(({ success, error }) => {
+        if (success) toast.success(success);
+        if (error) toast.error(error);
+      });
+    });
+  }
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -38,13 +49,20 @@ export default function PostOptions({
         />
       </DialogTrigger>
 
-      <DialogContent hideCloseButton className="dialog_content">
+      <DialogContent
+        hideCloseButton
+        aria-describedby=""
+        className="dialog_content"
+      >
+        <DialogTitle hidden />
+
         {isPostOwner && (
-          <form>
+          <form action={(formData) => handleDeletePost(formData)}>
             <input type="hidden" name="id" value={post.id} />
             <button
               type="submit"
               className="post_option text-red-500 font-bold focus:invisible"
+              disabled={isPending}
             >
               Delete post
             </button>

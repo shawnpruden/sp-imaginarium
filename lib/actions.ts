@@ -208,3 +208,26 @@ export const createPost = async (
     return { error: 'Failed to create post. Please try again later.' };
   }
 };
+
+export async function deletePost(formData: FormData) {
+  const userId = await getUserId();
+  const { id } = DeletePostFormSchema.parse({ id: formData.get('id') });
+
+  const post = await prisma.post.findUnique({
+    where: {
+      id,
+      userId,
+    },
+  });
+  if (!post) return { error: 'Post not found!' };
+
+  try {
+    await prisma.post.delete({ where: { id } });
+
+    revalidatePath('/dashboard');
+    return { success: 'Post deleted!' };
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to delete post. Please try again later.' };
+  }
+}
