@@ -76,6 +76,7 @@ export default function CreatePage() {
                 <Image
                   src={fileUrl}
                   fill
+                  sizes="100%"
                   alt="post preview"
                   className="rounded-md object-cover"
                 />
