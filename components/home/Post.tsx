@@ -1,3 +1,5 @@
+// todo: get current location and display
+
 import { PostWithExtras } from '@/lib/types';
 import UserAvatar from '../shared/UserAvatar';
 import PostOptions from './PostOptions';
