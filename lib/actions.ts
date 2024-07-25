@@ -1,13 +1,19 @@
 'use server';
 
-import { signIn } from '@/auth';
+import { auth, signIn } from '@/auth';
 import prisma from '@/lib/prisma';
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
 import bcrypt from 'bcryptjs';
 import { AuthError } from 'next-auth';
+import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { sendPasswordResetEmail, sendVerificationEmail } from './mail';
-import { AuthFormSchemas, ResetPasswordSchema } from './schemas';
+import {
+  AuthFormSchemas,
+  CreatePostFormSchema,
+  DeletePostFormSchema,
+  ResetPasswordSchema,
+} from './schemas';
 import {
   generateResetPasswordToken,
   generateVerificationToken,
@@ -16,6 +22,18 @@ import {
   getVerificationTokenByToken,
 } from './utils';
 
+async function getUserId() {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    throw new Error('You must be signed in to use this feature.');
+  }
+
+  return userId;
+}
+
+// * authentication
 export const login = async (values: z.infer<typeof AuthFormSchemas.login>) => {
   const validatedFields = AuthFormSchemas.login.safeParse(values);
 
@@ -99,9 +117,7 @@ export const forgotPassword = async (
 
   const { email } = validatedFields.data;
   const existingUser = await getUserByEmail(email);
-  if (!existingUser) {
-    return { error: 'Email not found!' };
-  }
+  if (!existingUser) return { error: 'Email not found!' };
 
   const passwordResetToken = await generateResetPasswordToken(email);
   await sendPasswordResetEmail(
@@ -149,24 +165,16 @@ export const resetPassword = async (
 };
 
 export const verifyToken = async (token: string | null) => {
-  if (!token) {
-    return { error: 'Token not found!' };
-  }
+  if (!token) return { error: 'Token not found!' };
 
   const existingToken = await getVerificationTokenByToken(token);
-  if (!existingToken) {
-    return { error: 'Token does not exist!' };
-  }
+  if (!existingToken) return { error: 'Token does not exist!' };
 
   const hasExpired = new Date(existingToken.expires) < new Date();
-  if (hasExpired) {
-    return { error: 'Token has expired!' };
-  }
+  if (hasExpired) return { error: 'Token has expired!' };
 
   const existingUser = await getUserByEmail(existingToken.email);
-  if (!existingUser) {
-    return { error: 'Email does not exist!' };
-  }
+  if (!existingUser) return { error: 'Email does not exist!' };
 
   await prisma.user.update({
     where: { id: existingUser.id },
@@ -175,4 +183,28 @@ export const verifyToken = async (token: string | null) => {
   await prisma.verificationToken.delete({ where: { id: existingToken.id } });
 
   return { success: 'Email verified!' };
+};
+
+// * posting
+export const createPost = async (
+  values: z.infer<typeof CreatePostFormSchema>
+) => {
+  const userId = await getUserId();
+
+  const validatedFields = CreatePostFormSchema.safeParse(values);
+  if (!validatedFields.success) return { error: 'Invalid fields!' };
+
+  const { fileUrl, caption } = validatedFields.data;
+
+  try {
+    await prisma.post.create({
+      data: { fileUrl, caption, user: { connect: { id: userId } } },
+    });
+
+    revalidatePath('/dashboard');
+    return { success: 'Post created!' };
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to create post. Please try again later.' };
+  }
 };

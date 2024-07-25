@@ -19,9 +19,9 @@ export default function SocialProviders({ isPending }: { isPending: boolean }) {
   return (
     <>
       <div className="flex items-center justify-center my-2">
-        <p className="grow border-t border-gray-200 dark:border-gray-700" />
+        <p className="grow border-t border-gray-300 dark:border-gray-700" />
         <span className="px-4 text-black dark:text-white">or</span>
-        <p className="grow border-t border-gray-200 dark:border-gray-700" />
+        <p className="grow border-t border-gray-300 dark:border-gray-700" />
       </div>
 
       <div className="flex flex-col gap-y-3">

@@ -46,7 +46,7 @@ export default function MenuItems({
         return (
           <li key={`${name}-${index}`}>
             {hasSeparator && (
-              <DropdownMenuSeparator className="bg-gray-200 dark:bg-neutral-700" />
+              <DropdownMenuSeparator className="bg-gray-300 dark:bg-neutral-700" />
             )}
             <DropdownMenuItem className="menu_btn_item" onClick={onClick}>
               <MenuIcon size={20} />

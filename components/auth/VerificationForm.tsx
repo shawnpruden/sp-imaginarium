@@ -47,7 +47,7 @@ export default function VerificationForm() {
   }, [onSubmit]);
 
   return (
-    <AlertDialog open>
+    <AlertDialog defaultOpen>
       <AlertDialogContent className="outline-none">
         <FormWrapper>
           <AlertDialogHeader>

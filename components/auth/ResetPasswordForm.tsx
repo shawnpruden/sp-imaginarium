@@ -52,7 +52,7 @@ export default function AuthForm() {
   }
 
   return (
-    <AlertDialog open>
+    <AlertDialog defaultOpen>
       <AlertDialogContent className="outline-none">
         <FormWrapper>
           <AlertDialogHeader>
