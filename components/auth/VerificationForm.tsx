@@ -13,7 +13,7 @@ import { AlertCircle, CircleCheck, MailCheck, MailWarning } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-import { Alert, AlertTitle } from '@/components/alert';
+import { Alert, AlertTitle } from '@/components/ui/alert';
 import FormWrapper from '../shared/FormWrapper';
 
 type Message = {
