@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import type { User } from 'next-auth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { buttonVariants } from '../ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import UserAvatar from '../shared/UserAvatar';
 
 export default function ProfileLink({ user }: { user: User }) {

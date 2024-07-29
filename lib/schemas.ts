@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// * posts
+// * posting
 export const PostsSchema = z.object({
   id: z.string(),
   fileUrl: z.string().url(),
@@ -10,6 +10,10 @@ export const PostsSchema = z.object({
 export const CreatePostFormSchema = PostsSchema.omit({ id: true });
 export const UpdatePostFormSchema = PostsSchema;
 export const DeletePostFormSchema = PostsSchema.pick({ id: true });
+
+export const LikeSchema = z.object({
+  postId: z.string(),
+});
 
 // * auth form
 const BaseAuthFormSchemas = z.object({

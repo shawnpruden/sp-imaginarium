@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { Menu } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import MenuItems from './MenuItems';
 import ThemeSwitcher from './ThemeSwitcher';
 

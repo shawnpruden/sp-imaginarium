@@ -10,14 +10,14 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useOptimisticSubmit, useToast } from '@/hooks';
 import { resetPassword } from '@/lib/actions';
 import { ResetPasswordSchema } from '@/lib/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Lock } from 'lucide-react';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 import { z } from 'zod';
 import FormWrapper from '../shared/FormWrapper';
 import {
@@ -25,11 +25,11 @@ import {
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '../ui/alert-dialog';
-import Link from 'next/link';
+} from '@/components/ui/alert-dialog';
 
 export default function AuthForm() {
-  const [isPending, startTransition] = useTransition();
+  const { isPending, handleAction } = useOptimisticSubmit();
+  const { handleToast } = useToast();
 
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
@@ -43,11 +43,8 @@ export default function AuthForm() {
   });
 
   function onSubmit(values: z.infer<typeof ResetPasswordSchema>) {
-    startTransition(() =>
-      resetPassword(values, token).then(({ success, error }) => {
-        if (success) toast.success(success);
-        if (error) toast.error(error);
-      })
+    handleAction(() =>
+      resetPassword(values, token).then((message) => handleToast(message))
     );
   }
 
