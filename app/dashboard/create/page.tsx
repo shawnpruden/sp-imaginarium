@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/hooks';
 import { createPost } from '@/lib/actions';
 import { CreatePostFormSchema } from '@/lib/schemas';
 import { UploadDropzone } from '@/lib/uploadthing';
@@ -29,6 +30,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 export default function CreatePage() {
+  const { handleToast } = useToast();
   const router = useRouter();
   const pathname = usePathname();
   const isCreatePage = pathname === '/dashboard/create';
@@ -42,13 +44,9 @@ export default function CreatePage() {
   });
 
   async function onSubmit(values: z.infer<typeof CreatePostFormSchema>) {
-    createPost(values).then(({ success, error }) => {
-      if (success) {
-        toast.success(success);
-        router.push('/dashboard');
-      }
-
-      if (error) toast.error(error);
+    createPost(values).then((message) => {
+      handleToast(message);
+      if (message.success) router.push('/dashboard');
     });
   }
 

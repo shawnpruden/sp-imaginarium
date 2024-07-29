@@ -1,5 +1,12 @@
 'use client';
 
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -10,24 +17,16 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useOptimisticSubmit, useToast } from '@/hooks';
 import { AuthActionReturn, AuthFormActions } from '@/lib';
 import { AuthFormSchemas } from '@/lib/schemas';
 import { getAuthFormConfig } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Lock } from 'lucide-react';
 import Link from 'next/link';
-import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 import { z } from 'zod';
 import FormWrapper from '../shared/FormWrapper';
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '../ui/alert-dialog';
 import SocialProviders from './SocialProviders';
 
 export default function ResetPasswordForm({
@@ -35,7 +34,8 @@ export default function ResetPasswordForm({
 }: {
   mode: 'login' | 'signUp' | 'forgotPassword';
 }) {
-  const [isPending, startTransition] = useTransition();
+  const { isPending, handleAction } = useOptimisticSubmit();
+  const { handleToast } = useToast();
 
   const formSchema = AuthFormSchemas[mode];
   const form = useForm<z.infer<typeof formSchema>>({
@@ -52,11 +52,8 @@ export default function ResetPasswordForm({
   ) => AuthActionReturn;
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    startTransition(() =>
-      formAction(values).then(({ success, error }) => {
-        if (success) toast.success(success);
-        if (error) toast.error(error);
-      })
+    handleAction(() =>
+      formAction(values).then((message) => handleToast(message))
     );
   }
 

@@ -6,14 +6,13 @@ import {
   DialogContent,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { useOptimisticSubmit, useToast } from '@/hooks';
 import { deletePost } from '@/lib/actions';
 import { PostWithExtras } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
-import { useTransition } from 'react';
-import { toast } from 'sonner';
 
 type PostOptionsProps = {
   post: PostWithExtras;
@@ -26,16 +25,15 @@ export default function PostMenu({
   isPostOwner,
   className,
 }: PostOptionsProps) {
-  const [isPending, startTransition] = useTransition();
+  const { isPending, handleAction } = useOptimisticSubmit();
+  const { handleToast } = useToast();
 
   function handleDeletePost(formData: FormData) {
-    startTransition(() => {
-      deletePost(formData).then(({ success, error }) => {
-        if (success) toast.success(success);
-        if (error) toast.error(error);
-      });
+    handleAction(() => {
+      deletePost(formData).then((message) => handleToast(message));
     });
   }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -68,7 +66,10 @@ export default function PostMenu({
         )}
 
         <form action="">
-          <button className="post_option text-red-500 font-bold">
+          <button
+            className="post_option text-red-500 font-bold"
+            disabled={isPending}
+          >
             Unfollow
           </button>
         </form>
@@ -77,18 +78,22 @@ export default function PostMenu({
           <Link
             scroll={false}
             href={`/dashboard/p/${post.id}/edit`}
-            className="post_option"
+            className={cn('post_option', isPending && 'pointer-events-none')}
           >
             Edit
           </Link>
         )}
 
         <form action="">
-          <button className="post_option">Add to favorites</button>
+          <button className="post_option" disabled={isPending}>
+            Add to favorites
+          </button>
         </form>
 
         <DialogClose asChild>
-          <button className="post_option border-none">Cancel</button>
+          <button className="post_option border-none" disabled={isPending}>
+            Cancel
+          </button>
         </DialogClose>
       </DialogContent>
     </Dialog>
