@@ -3,7 +3,7 @@
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import SearchBar from './SearchBar';
 
 export default function Header() {

@@ -5,7 +5,7 @@ import { signIn } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 
 export default function SocialProviders({ isPending }: { isPending: boolean }) {
   const { theme } = useTheme();

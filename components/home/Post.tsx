@@ -8,6 +8,7 @@ import { BadgeCheck } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import UserAvatar from '../shared/UserAvatar';
+import PostActions from './PostActions';
 import PostMenu from './PostMenu';
 import Timestamp from './Timestamp';
 
@@ -39,8 +40,9 @@ export default async function Post({ post }: { post: PostWithExtras }) {
         <PostMenu post={post} isPostOwner={post.userId === userId} />
       </div>
 
-      <Card className="relative h-[582px] w-full rounded-none sm:rounded-md">
+      <Card className="relative h-[482px] overflow-hidden sm:h-[582px] w-full rounded-none sm:rounded-md">
         <Image
+          priority
           src={post.fileUrl}
           alt="post image"
           fill
@@ -48,6 +50,8 @@ export default async function Post({ post }: { post: PostWithExtras }) {
           className="object-cover"
         />
       </Card>
+
+      <PostActions post={post} userId={userId} className="px-3 sm:px-0" />
 
       {post.caption && (
         <div className="text-sm leading-none flex items-center gap-x-2 font-medium px-3 sm:px-0">
