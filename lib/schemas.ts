@@ -15,6 +15,10 @@ export const LikeSchema = z.object({
   postId: z.string(),
 });
 
+export const BookmarkSchema = z.object({
+  postId: z.string(),
+});
+
 // * auth form
 const BaseAuthFormSchemas = z.object({
   email: z

@@ -6,7 +6,7 @@ import { PostWithExtras } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Like } from '@prisma/client';
 import { Heart } from 'lucide-react';
-import { useOptimistic } from 'react';
+import { useOptimistic, useState } from 'react';
 
 export default function LikeButton({
   post,
@@ -15,6 +15,7 @@ export default function LikeButton({
   post: PostWithExtras;
   userId?: string;
 }) {
+  const [isActive, setIsActive] = useState(false);
   const { isPending, handleAction } = useOptimisticSubmit();
   const { handleToast } = useToast();
 
@@ -41,16 +42,19 @@ export default function LikeButton({
   const isLiked = optimisticLikes.some(isLikedByCurrentUser);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-6">
       <form action={(formData: FormData) => handleLike(formData)}>
         <input type="hidden" name="postId" value={post.id} />
 
         <button
           type="submit"
           className={cn(
-            !isLiked && 'hover:opacity-65 transition-all duration-300'
+            !isLiked && 'hover:opacity-65 transition-all duration-300',
+            isActive && !isLiked && 'animate-heartbeat'
           )}
           disabled={isPending}
+          onMouseEnter={() => setIsActive(false)}
+          onMouseLeave={() => setIsActive(true)}
         >
           <Heart
             className={cn('h-6 w-6', isLiked && 'text-red-500 fill-red-500')}

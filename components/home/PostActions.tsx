@@ -1,7 +1,9 @@
 import { PostWithExtras } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import BookmarkButton from './BookmarkButton';
 import LikeButton from './LikeButton';
 import MessageButton from './MessageButton';
+import ShareButton from './ShareButton';
 
 type PostActionsProps = {
   post: PostWithExtras;
@@ -15,14 +17,14 @@ export default function PostActions({
   className,
 }: PostActionsProps) {
   return (
-    <div className={cn('flex gap-x-2 w-full', className)}>
+    <div className={cn('flex gap-x-4', className)}>
       <LikeButton post={post} userId={userId} />
 
-      {/* <MessageButton /> */}
+      <MessageButton postId={post.id} />
 
-      {/* <ShareButton postId={post.id} /> */}
+      <ShareButton postId={post.id} />
 
-      {/* <BookmarkButton post={post} userId={userId} /> */}
+      <BookmarkButton post={post} userId={userId} />
     </div>
   );
 }

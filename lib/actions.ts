@@ -10,6 +10,7 @@ import { z } from 'zod';
 import { sendPasswordResetEmail, sendVerificationEmail } from './mail';
 import {
   AuthFormSchemas,
+  BookmarkSchema,
   CreatePostFormSchema,
   DeletePostFormSchema,
   LikeSchema,
@@ -29,6 +30,8 @@ async function getUserId() {
 
   return userId;
 }
+
+const NOT_LOGGED_IN = 'You must be signed in to use this feature.';
 
 // * authentication
 export const login = async (values: z.infer<typeof AuthFormSchemas.login>) => {
@@ -239,7 +242,7 @@ export async function deletePost(formData: FormData) {
 
 export async function likePost(formData: FormData) {
   const userId = await getUserId();
-  if (!userId) return { error: 'You must be signed in to use this feature.' };
+  if (!userId) return { error: NOT_LOGGED_IN };
 
   const validatedFields = LikeSchema.safeParse({
     postId: formData.get('postId'),
@@ -262,7 +265,6 @@ export async function likePost(formData: FormData) {
 
   if (like) {
     try {
-      console.log('delete', postId, userId);
       await prisma.like.delete({
         where: {
           postId_userId: {
@@ -287,6 +289,61 @@ export async function likePost(formData: FormData) {
       },
     });
     revalidatePath('/dashboard');
+    return {};
+  } catch (error) {
+    return { error: 'Something went wrong!' };
+  }
+}
+
+export async function bookmarkPost(formData: FormData) {
+  const userId = await getUserId();
+  if (!userId) return { error: NOT_LOGGED_IN };
+
+  const validatedFields = BookmarkSchema.safeParse({
+    postId: formData.get('postId'),
+  });
+  if (!validatedFields.success) return { error: 'Something went wrong!' };
+
+  const { postId } = validatedFields.data;
+
+  const post = await prisma.post.findUnique({ where: { id: postId } });
+  if (!post) return { error: 'Post not found!' };
+
+  const bookmark = await prisma.savedPost.findUnique({
+    where: {
+      postId_userId: {
+        postId,
+        userId,
+      },
+    },
+  });
+
+  if (bookmark) {
+    try {
+      await prisma.savedPost.delete({
+        where: {
+          postId_userId: {
+            postId,
+            userId,
+          },
+        },
+      });
+      revalidatePath('/dashboard');
+      return {};
+    } catch (error) {
+      return { error: 'Something went wrong!' };
+    }
+  }
+
+  try {
+    await prisma.savedPost.create({
+      data: {
+        postId,
+        userId,
+      },
+    });
+    revalidatePath('/dashboard');
+    return {};
   } catch (error) {
     return { error: 'Something went wrong!' };
   }
